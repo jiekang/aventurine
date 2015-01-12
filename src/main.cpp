@@ -1,30 +1,50 @@
 #include <iostream>
 #include <fstream>
+#include <atomic>
+#include <thread>
 
 using namespace std;
 
-void parseLine(string line) {
-    cout << "Parsing: " << line << endl;
+struct AtomicCounter {
+    atomic<int> value {0};
+
+    void increment() {
+        ++value;
+    }
+
+    int get() {
+        return value.load();
+    }
+};
+
+void waitForExit(AtomicCounter* counter) {
+    string s;
+    while(getline(cin, s) && s.empty()) {
+    }
+    counter->increment();
 }
 
-void readFile(char* fileName) {
+void parseLine(int location, string line) {
+    cout << "Parsing: " << location << " : " << line << endl;
+}
+
+void readFile(AtomicCounter* counter, char* fileName) {
     string s;    
     string line;
     int location = 0;
 
     cout << "Reading file: " << fileName << endl;
-    while(getline(cin, s) && s.empty()) {
+    while(counter->get() == 0) {
         ifstream file(fileName);
         if (file.is_open()) {
             file.seekg(location, file.beg);
             getline(file, line);
-            cout << location << " " << line << endl;
             int seekpos = file.tellg();
             if (seekpos >= 0) {
                 location = seekpos;
             }
             if (!line.empty()) {
-                parseLine(line);
+                parseLine(location, line);
             }
             file.close();
         } else {
@@ -32,13 +52,20 @@ void readFile(char* fileName) {
             break;
         }
     }
+    cout << "Done reading file. Exiting" << endl;
+}
+
+void startReaderThread(AtomicCounter* counter, char* fileName) {
+    thread t(readFile, counter, fileName);
+    t.detach();
 }
 
 int main(int argc, char* argv[]) {
+    struct AtomicCounter c;
     if (argc != 2) {
         cout << "Usage: aventurine <file-name>" << endl;
         return -1;
     }
-    
-    readFile(argv[1]);
+    startReaderThread(&c, argv[1]);
+    waitForExit(&c);
 }
