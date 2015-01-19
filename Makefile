@@ -2,8 +2,8 @@ SRCDIR=src
 BUILDDIR=build
 TARGET=bin/aventurine
 
-CC=clang++
-CX=clang++ -c
+CC=g++
+CX=g++ -c
 
 CFLAGS=-g -Wall
 CTFLAGS=-std=c++11 -pthread
