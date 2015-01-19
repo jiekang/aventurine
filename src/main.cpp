@@ -17,11 +17,12 @@ struct AtomicCounter {
     }
 };
 
-void waitForExit(AtomicCounter* counter) {
+void waitForExit(AtomicCounter* counter, thread* t) {
     string s;
     while(getline(cin, s) && s.empty()) {
     }
     counter->increment();
+    t->join();
 }
 
 void parseLine(int location, string line) {
@@ -55,9 +56,9 @@ void readFile(AtomicCounter* counter, char* fileName) {
     cout << "Done reading file. Exiting" << endl;
 }
 
-void startReaderThread(AtomicCounter* counter, char* fileName) {
+thread startReaderThread(AtomicCounter* counter, char* fileName) {
     thread t(readFile, counter, fileName);
-    t.detach();
+    return t;
 }
 
 int main(int argc, char* argv[]) {
@@ -66,6 +67,6 @@ int main(int argc, char* argv[]) {
         cout << "Usage: aventurine <file-name>" << endl;
         return -1;
     }
-    startReaderThread(&c, argv[1]);
-    waitForExit(&c);
+    thread t = startReaderThread(&c, argv[1]);
+    waitForExit(&c, &t);
 }
