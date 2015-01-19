@@ -1,6 +1,8 @@
 #ifndef METHODICON_H
 #define METHODICON_H
 
+#include <iostream>
+
 #include <QColor>
 #include <QGraphicsItem>
 
@@ -14,7 +16,6 @@ class MethodIcon : public QGraphicsItem
                    int x, int y);
 
         QRectF boundingRect() const Q_DECL_OVERRIDE;
-        QPainterPath shape() const Q_DECL_OVERRIDE;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget) Q_DECL_OVERRIDE;
 
     protected:
@@ -27,6 +28,8 @@ class MethodIcon : public QGraphicsItem
         MethodData* md;
         int x;
         int y;
+        std::string toolTip;
+        bool displayTooltip;
 };
 
 #endif // METHODICON_H

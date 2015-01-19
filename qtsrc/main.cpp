@@ -19,13 +19,20 @@ int main(int argc, char *argv[])
     Storage s;
     AtomicCounter c;
 
-    FileReader f(&s, &c, argv[1]);
-
-    f.startReaderThread();
-
     QApplication a(argc, argv);
     MainWindow w;
+
+    auto func = [&] (MethodData* md) {
+        w.addToScene(md, 0, 0);
+    };
+
+    s.addWorkerFunction(func);
+
     w.show();
+
+
+//    FileReader f(&s, &c, argv[1]);
+//    f.startReaderThread();
 
     return a.exec();
 }
