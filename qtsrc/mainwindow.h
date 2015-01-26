@@ -6,16 +6,24 @@
 #include <QGraphicsView>
 
 #include "methoddata.h"
+#include "atomiccounter.h"
 
 class MainWindow : public QWidget
 {
     Q_OBJECT
-    public:
-        MainWindow(QWidget *parent = 0);
-        void addToScene(MethodData *md, int x, int y);
-    private:
-        void createScene();
 
+    public:
+        MainWindow(AtomicCounter *c);
+
+        ~MainWindow();
+
+    public slots:
+        void addIconToScene(MethodData *md, int x, int y);
+
+    private:
+        MainWindow(QWidget *parent = 0);
+
+        AtomicCounter *c;
         QGraphicsScene *scene;
         QGraphicsView *view;
 };

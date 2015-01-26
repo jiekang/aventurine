@@ -4,18 +4,26 @@
 #include <vector>
 #include <functional>
 
+#include <QObject>
+
+
 #include "methoddata.h"
 
-class Storage
+class Storage : public QObject
 {
+        Q_OBJECT
+
     public:
         Storage();
 
-        void addWorkerFunction(std::function<void (MethodData*)> workerFunction);
-        void addMethodData(MethodData* methodData);
+    public slots:
+        void addMethodData(MethodData* md);
+    signals:
+        void dataAdded(MethodData* md, int x, int y);
 
     private:
-        std::vector<std::function<void (MethodData*)>> func_list;
+        int x = 0;
+        int y = 0;
 };
 
 #endif // STORAGE_H

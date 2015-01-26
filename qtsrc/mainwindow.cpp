@@ -7,27 +7,37 @@
 #include "mainwindow.h"
 #include "methodicon.h"
 
+MainWindow::MainWindow(AtomicCounter *c)
+    : MainWindow()
+{
+    this->c = c;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+
     this->view = new QGraphicsView(this);
 
     this->scene = new QGraphicsScene(this);
 
     this->view->setScene(scene);
+    this->view->setMinimumSize(800, 600);
+    this->view->setDragMode(QGraphicsView::ScrollHandDrag);
+    this->view->show();
 
     this->setWindowTitle("Aventurine");
-    this->addToScene(new MethodData(false, "a", "b", "c"), 0, 0);
-    this->addToScene(new MethodData(false, "a", "b", "c"), 0, 100);
-    this->addToScene(new MethodData(false, "a", "b", "c"), 100, 100);
-    this->addToScene(new MethodData(false, "a", "b", "c"), 100, 0);
+
+    this->scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+}
+MainWindow::~MainWindow() {
+    this->c->increment();
+    delete view;
+    delete scene;
 }
 
-void MainWindow::addToScene(MethodData* md, int x, int y) {
-    QColor color(0, 255, 0);
-    QGraphicsItem *item = new MethodIcon(color, md, x, y);
+void MainWindow::addIconToScene(MethodData* md, int x, int y) {
+    QGraphicsItem *item = new MethodIcon(md, x, y);
     this->scene->addItem(item);
-
-    QRectF rect = this->scene->itemsBoundingRect();
-    this->view->setMinimumSize(rect.width(), rect.height());
+    this->view->setSceneRect(this->scene->sceneRect());
 }

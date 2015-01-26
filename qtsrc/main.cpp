@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <QApplication>
+#include <QObject>
 
 #include "mainwindow.h"
 #include "atomiccounter.h"
@@ -9,6 +10,8 @@
 #include "methoddata.h"
 #include "storage.h"
 
+#include "controllertemp.h"
+
 int main(int argc, char *argv[])
 {
     if (argc != 2) {
@@ -16,23 +19,21 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    Storage s;
+    QApplication a(argc, argv);
+
     AtomicCounter c;
 
-    QApplication a(argc, argv);
-    MainWindow w;
+    Storage s;
 
-    auto func = [&] (MethodData* md) {
-        w.addToScene(md, 0, 0);
-    };
+    MainWindow w(&c);
+    ControllerTemp t;
+    t.connect(&w, &s);
 
-    s.addWorkerFunction(func);
+
+    FileReader f(&s, &c, argv[1]);
+    f.startReaderThread();
 
     w.show();
-
-
-//    FileReader f(&s, &c, argv[1]);
-//    f.startReaderThread();
 
     return a.exec();
 }
