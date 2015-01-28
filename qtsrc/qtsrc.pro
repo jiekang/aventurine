@@ -18,13 +18,17 @@ SOURCES += main.cpp\
     atomiccounter.cpp \
     methoddata.cpp \
     storage.cpp \
-    methodicon.cpp
+    methodicon.cpp \
+    methodtooltip.cpp \
+    controllertemp.cpp
 
 HEADERS  += mainwindow.h \
     filereader.h \
     atomiccounter.h \
     methoddata.h \
     storage.h \
-    methodicon.h
+    methodicon.h \
+    methodtooltip.h \
+    controllertemp.h
 
 QMAKE_CXXFLAGS += -std=c++11 -pthread

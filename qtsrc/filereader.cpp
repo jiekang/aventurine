@@ -5,6 +5,8 @@
 #include <string.h>
 #include <regex>
 
+#include <unistd.h>
+
 #include "methoddata.h"
 
 FileReader::FileReader(Storage* storage, AtomicCounter* stopSignal, char* fileName)
@@ -75,6 +77,7 @@ void FileReader::readFile()
             std::cout << "Error opening file: " << fileName << std::endl;
             break;
         }
+        usleep(500000);
     }
     std::cout << "Done reading file. Exiting" << std::endl;
 }

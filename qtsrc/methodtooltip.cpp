@@ -18,7 +18,8 @@ void MethodTooltip::paint(QPainter *painter, const QStyleOptionGraphicsItem *ite
 
     for (int i = 0; i < 4; i++) {
         QString str = QString::fromUtf8(this->tooltip[i].c_str());
-        painter->drawText(15, i*20 + 25, str);
+        painter->setPen(QColor(0, 0, 0));
+        painter->drawText(15, i*13 + 25, str);
     }
 
 }

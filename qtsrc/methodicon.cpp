@@ -31,7 +31,7 @@ MethodIcon::MethodIcon(MethodData* md, int x, int y)
 }
 
 void MethodIcon::calculateBoundingRect(MethodData *md) {
-    QFontMetrics fm(QFont("times", 12));
+    QFontMetrics fm(QFont("times", this->fontSize));
 
     int maxwidth = fm.width(QString("Entering"));
     maxwidth = fm.width(QString::fromUtf8(md->className.c_str())) + fm.width(QString("Class: "));
@@ -53,16 +53,18 @@ QRectF MethodIcon::boundingRect() const
 QPainterPath MethodIcon::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 50, 50);
+    path.addRect(0, 0, this->width, this->height);
     return path;
 }
 
 void MethodIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, QWidget *widget)
 {
     Q_UNUSED(widget);
-    painter->fillRect(QRectF(0, 0, 50, 50), this->color);
-    painter->setFont(QFont("times", 12));
-
+    painter->fillRect(QRectF(0, 0, this->width, this->height), this->color);
+    painter->setFont(QFont("times", this->fontSize));
+    painter->setPen(QColor(255, 255, 255));
+    QString str = QString::fromUtf8(this->md->methodName.c_str());
+    painter->drawText(this->width + 5, this->height/2, str);
 
     if (this->displayTooltip) {
         MethodTooltip m = MethodTooltip(this->md);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 
 #include <QColor>
 #include <QGraphicsItem>
@@ -34,10 +35,13 @@ MainWindow::~MainWindow() {
     this->c->increment();
     delete view;
     delete scene;
+
+    sleep(1);
 }
 
 void MainWindow::addIconToScene(MethodData* md, int x, int y) {
     QGraphicsItem *item = new MethodIcon(md, x, y);
     this->scene->addItem(item);
     this->view->setSceneRect(this->scene->sceneRect());
+    this->view->centerOn(x, y);
 }
