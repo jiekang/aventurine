@@ -23,6 +23,8 @@
 #include <QColor>
 #include <QGraphicsItem>
 #include <QHBoxLayout>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 #include "mainwindow.h"
 #include "methodicon.h"
@@ -37,30 +39,74 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
 
+
+    this->methodScene = new QGraphicsScene(this);
+    this->methodScene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+
+    this->classScene = new QGraphicsScene(this);
+    this->classScene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+
     this->view = new QGraphicsView(this);
-
-    this->scene = new QGraphicsScene(this);
-
-    this->view->setScene(scene);
+    this->view->setScene(this->methodScene);
     this->view->setMinimumSize(800, 600);
     this->view->setDragMode(QGraphicsView::ScrollHandDrag);
     this->view->show();
 
     this->setWindowTitle("Aventurine");
 
-    this->scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+    this->displayClass = new QAction("Display classes", this);
+    this->displayClass->setCheckable(true);
+    connect(this->displayClass, SIGNAL(toggled(bool)), this, SLOT(toggleDisplayClassData()));
+
+    this->displayMethod = new QAction("Display methods", this);
+    this->displayMethod->setCheckable(true);
+    connect(this->displayMethod, SIGNAL(toggled(bool)), this, SLOT(toggleDisplayMethodData()));
+
+    this->displayGroup = new QActionGroup(this);
+    this->displayGroup->addAction(this->displayClass);
+    this->displayGroup->addAction(this->displayMethod);
+
+    this->displayMethod->setChecked(true);
+
+    this->autoScroll = new QAction("Autoscroll", this);
+    this->autoScroll->setCheckable(true);
+    this->autoScroll->setChecked(true);
 }
 MainWindow::~MainWindow() {
     this->c->increment();
     delete view;
-    delete scene;
+    delete methodScene;
+    delete classScene;
 
     sleep(1);
 }
 
 void MainWindow::addIconToScene(MethodData* md, int x, int y) {
     QGraphicsItem *item = new MethodIcon(md, x, y);
-    this->scene->addItem(item);
-    this->view->setSceneRect(this->scene->sceneRect());
-    this->view->centerOn(x, y);
+    this->methodScene->addItem(item);
+
+    this->view->setSceneRect(this->methodScene->sceneRect());
+
+    if(this->autoScroll->isChecked() && this->displayMethod->isChecked()) {
+        this->view->centerOn(x, y);
+    }
+}
+
+void MainWindow::toggleDisplayClassData() {
+    this->view->setScene(this->classScene);
+    this->view->setSceneRect(this->classScene->sceneRect());
+}
+
+void MainWindow::toggleDisplayMethodData() {
+    this->view->setScene(this->methodScene);
+    this->view->setSceneRect(this->methodScene->sceneRect());
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event) {
+    QMenu menu(this);
+    menu.addAction(this->displayClass);
+    menu.addAction(this->displayMethod);
+    menu.addSeparator();
+    menu.addAction(this->autoScroll);
+    menu.exec(event->globalPos());
 }

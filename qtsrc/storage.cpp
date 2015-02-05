@@ -26,6 +26,7 @@ Storage::Storage()
 }
 
 void Storage::addMethodData(MethodData* md) {
+    methodVector.push_back(md);
     if (md->enter) {
         this->x += 25;
     }

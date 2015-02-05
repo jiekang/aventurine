@@ -43,6 +43,8 @@ class Storage : public QObject
     private:
         int x = 0;
         int y = 0;
+
+        std::vector<MethodData*> methodVector;
 };
 
 #endif // STORAGE_H

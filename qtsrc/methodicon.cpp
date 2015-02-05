@@ -94,11 +94,13 @@ void MethodIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *item, 
 void MethodIcon::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
-    this->displayTooltip = !(this->displayTooltip);
-    if (this->displayTooltip) {
-        this->setZValue(1);
-    } else {
-        this->setZValue(0);
+    if (event->button() == Qt::LeftButton) {
+        this->displayTooltip = !(this->displayTooltip);
+        if (this->displayTooltip) {
+            this->setZValue(1);
+        } else {
+            this->setZValue(0);
+        }
     }
 
     update();

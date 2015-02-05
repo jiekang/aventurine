@@ -23,6 +23,8 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QAction>
+#include <QActionGroup>
 
 #include "methoddata.h"
 #include "atomiccounter.h"
@@ -43,8 +45,22 @@ class MainWindow : public QWidget
         MainWindow(QWidget *parent = 0);
 
         AtomicCounter *c;
-        QGraphicsScene *scene;
+        QGraphicsScene *methodScene;
+        QGraphicsScene *classScene;
         QGraphicsView *view;
+
+        QActionGroup *displayGroup;
+        QAction *displayClass;
+        QAction *displayMethod;
+
+        QAction *autoScroll;
+
+    private slots:
+        void toggleDisplayClassData();
+        void toggleDisplayMethodData();
+
+    protected:
+        void contextMenuEvent(QContextMenuEvent *event);
 };
 
 #endif // MAINWINDOW_H

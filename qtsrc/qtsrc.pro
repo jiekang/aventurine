@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     storage.cpp \
     methodicon.cpp \
     methodtooltip.cpp \
-    controllertemp.cpp
+    controllertemp.cpp \
+    classdata.cpp
 
 HEADERS  += mainwindow.h \
     filereader.h \
@@ -29,6 +30,7 @@ HEADERS  += mainwindow.h \
     storage.h \
     methodicon.h \
     methodtooltip.h \
-    controllertemp.h
+    controllertemp.h \
+    classdata.h
 
 QMAKE_CXXFLAGS += -std=c++11 -pthread
